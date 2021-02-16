@@ -9,9 +9,9 @@ Build a simplified ETL process to digest the provided dataset into a star schema
 The goal here is to have a small set of fact and dimension tables in which stakeholders could rely on to extract data insights or use in reports.
 
 ### Tools and Technologies
-We would like you to use Python and SQL, as these are our everyday tools.  
+We propose you to use Python and SQL. If you want to use a different stack, please make sure to communicate and explain us why.
 
-Please feel free to use additional tools or tech stack, as long as the programming language used is Python. Be careful to use open-source technology so that we are able to replicate and use your code on our side.
+Also, feel free to use additional/surrounding tools or tech stack. Be careful to use open-source technology so that we are able to replicate and use your code on our side.
 
 What do you need to do
 -----------------------
