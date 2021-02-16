@@ -62,4 +62,3 @@ Instructions
 
 ERD
 --
-![alt text](erd.png "ERD")
