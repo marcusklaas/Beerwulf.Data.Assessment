@@ -3,7 +3,8 @@
 Welcome to the Beerwulf Data Engineering Interview Assessment. In this assessment we will test you on not only on your technical and coding skills but also on your line of thought, understanding of basic data modeling, and how to approach data problems.
 
 The assessment is a small ETL Project as explained below.
-
+## Once you complete the assessment
+You can zip the latest solution and send Drive/Dropbox/OneDrive link to us.
 # The Project
 Build a simplified ETL process to digest the provided dataset into a star schema.
 The goal here is to have a small set of fact and dimension tables in which stakeholders could rely on to extract data insights or use in reports.
