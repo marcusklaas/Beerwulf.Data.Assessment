@@ -16,9 +16,7 @@ Also, feel free to use additional/surrounding tools or tech stack. Be careful to
 
 What do you need to do
 -----------------------
-Clone this repo, build your ETL process and commit the code with your answers. 
-
-Open a Pull Request and in the description state "I have completed the test."
+Clone this repo, build your ETL process and prepare it to be runnable in a easy way. 
 
 #### What we expect from your assessment
 * Quick and dirt instructions to run your code.
