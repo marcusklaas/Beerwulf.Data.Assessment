@@ -29,11 +29,51 @@ The exact steps taken here would depend heavily on the environment the code woul
 ## Queries
 
 ### What are the bottom 3 nations in terms of revenue?
+```sql
+SELECT c_nationname, SUM(l_revenue) as nation_revenue FROM lineitems
+	JOIN customers ON l_custkey = c_custkey
+	GROUP BY c_nationname
+	ORDER BY nation_revenue ASC
+	LIMIT 3
+```
 
 ### From the top 3 nations, what is the most common shipping mode?
+```sql
+WITH top_nations AS (
+	SELECT c_nationname FROM lineitems
+	JOIN customers ON l_custkey = c_custkey
+	GROUP BY c_nationname
+	ORDER BY SUM(l_revenue) DESC
+	LIMIT 3
+)
+
+SELECT l_shipmode FROM lineitems
+	JOIN customers ON l_custkey = c_custkey AND c_nationname IN top_nations
+	GROUP BY l_shipmode
+	ORDER BY COUNT(l_id) DESC
+	LIMIT 1
+```
 
 ### What are the top 5 selling months?
+```sql
+SELECT DATE(l_commitdate, 'start of month') as commitmonth FROM lineitems
+	GROUP BY commitmonth
+	ORDER BY SUM(l_revenue) DESC
+	LIMIT 5
+```
 
 ### Who are the top customers in terms of either revenue or quantity?
+```sql
+SELECT c_name, SUM(l_revenue) AS total_cust_value FROM customers
+	JOIN lineitems ON l_custkey = c_custkey
+	GROUP BY l_custkey
+	ORDER BY total_cust_value DESC
+```
+Change `SUM(l_revenue) AS total_cust_value` to `SUM(l_quantity) AS total_cust_value` to weigh customers by quantity instead.
 
 ### Comparing the sales revenue on a financial year-to-year basis (July 1 to June 30)
+```sql
+SELECT strftime('%Y', DATE(l_commitdate, 'start of month', '+6 months')) AS financial_year, SUM(l_revenue) AS total_evenue FROM lineitems
+	GROUP BY financial_year
+	ORDER BY financial_year ASC
+```
