@@ -1,9 +1,10 @@
 # beerwulf data engineer assessment by Marcus Klaas de Vries
 
-## The star schema
+## The schema
 
-- Why we dropped the nation and region tables.
-- Why we only have a single fact table.
+The largest change to the original ERD is a denormalization to make it star shaped, with the `lineitems` table being the single fact table. To still allow linking customer, part and supplier information to these facts, we have included the foreign keys of the order table and 'partsupp' table to the fact table, with the exception of nation and region data. Those last two tables have been removed entirely and have been joined to the customer and supplier tables. We also drop the nation and region comment fields to reduce duplication. We felt this was justified as these fields are likely not very relevant for gathering insights. An alternative approach would have been to add region and nation foreign keys to the fact table for both customers and suppliers, but this seemed cumbersome and messy.
+
+![star-schema](beerwulf.png)
 
 
 ## Running the code
@@ -12,9 +13,11 @@ Provided python 3, sqlite3 and its associated python modules have been installed
 
 ## Random order data
 
-The primary concern with out-of-order data is that we may receive references to dimensions that have not been created yet. For example, a lineitem may be imported refering to a customer that has not yet been imported. The approach in my solution has been to import all dimensions first, and do the fact tables last. We exploit the star schema here, since it guarantees that the dimension tables themselves never refer to other tables.
+The primary concern with out-of-order data is that we may receive references to dimensions that have not been created yet. For example, a lineitem may be imported referring to a customer that has not yet been imported. The approach in my solution has been to import all dimensions first, and do the fact tables last. We exploit the star schema here, since it guarantees that the dimension tables themselves never refer to other tables.
 
 When the data is coming from a stream, this won't work anymore. Instead, when we find a reference to an entity that does not exist yet, we could create a dummy entity (signaled by a flag) before inserting the lineitem. Assuming the data stream eventually does becoming consistent, we will later update the dummy entity with the real details when its id shows up in the stream and drop the dummy flag. Alternatively, we could hold off on inserting a lineitem when not all the entities it refers to exist yet and insert them when all its references have been created. This is a bit more risky since you'll lose data when entities don't show up.
+
+Another issue that pops up with out-of-order data is that updates to lineitems and partsupps may be reordered, and it won't be possible to tell which one represents the most recent one without timestamps. But that is easily solved by adding them, and then only performing an update when an entities timestamp is later than the one in the database.
 
 ## Deploying to production
 

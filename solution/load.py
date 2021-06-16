@@ -1,5 +1,6 @@
 import sqlite3
 import csv
+from helpers import balance_status, map_helper, import_helper
 
 def main():
     db = connect_to_db()
@@ -26,46 +27,11 @@ def connect_to_db():
 
 # returns a region_id -> regionname map
 def load_regions():
-    map = {}
-    with open('region.tbl', 'r') as csvfile:
-        regionreader = csv.reader(csvfile, delimiter='|')
-        for row in regionreader:
-            map[int(row[0])] = row[1]
-    return map
+    return map_helper('region.tbl', lambda row: row[1])
 
 # returns a nation_id -> (nationname, regionname) map
 def load_nations(regions):
-    map = {}
-    with open('nation.tbl', 'r') as csvfile:
-        nationreader = csv.reader(csvfile, delimiter='|')
-        for row in nationreader:
-            map[int(row[0])] = (row[1], regions[int(row[2])])
-    return map
-
-# helper functions for customer balance classification
-def balance_status(balance):
-    real_balance = float(balance)
-    if real_balance == 0.0:
-        return 'settled'
-    if real_balance > 0.0:
-        return 'credit'
-    return 'debit'
-
-def import_helper(cursor, file_name, table_name, row_mapper):
-    table_width = 0
-    rows = []
-
-    with open(file_name, 'r') as csvfile:
-        reader = csv.reader(csvfile, delimiter='|')
-
-        for row in reader:
-            new_row = row_mapper(row)
-            table_width = len(new_row)
-            rows.append(new_row)
-
-    if table_width > 0:
-        query = f"REPLACE INTO {table_name} VALUES ({', '.join(['?'] * table_width)})"
-        cursor.executemany(query, rows)
+    return map_helper('nation.tbl', lambda row: (row[1], regions[int(row[2])]))
 
 def load_customers(cursor, nation_map):
     # create the table
@@ -92,7 +58,6 @@ def load_customers(cursor, nation_map):
         )
 
     import_helper(cursor, 'customer.tbl', 'customers', mapper)
-
 
 def load_suppliers(cursor, nation_map):
     query = '''CREATE TABLE suppliers
