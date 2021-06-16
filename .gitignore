@@ -106,3 +106,12 @@ fabric.properties
 .idea/codestream.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/pycharm
+
+# ignore extracted data files
+*.tbl
+
+# ignore testdatabase
+**/test.db
+
+# ignore sqlite3 lock files
+**.tbl#
