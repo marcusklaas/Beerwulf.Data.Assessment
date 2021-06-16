@@ -115,3 +115,6 @@ fabric.properties
 
 # ignore sqlite3 lock files
 **.tbl#
+
+# pycache
+**/__pycache__/**

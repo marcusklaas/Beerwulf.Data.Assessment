@@ -29,5 +29,5 @@ def import_helper(cursor, file_name, table_name, row_mapper):
             rows.append(new_row)
 
     if table_width > 0:
-        query = f"REPLACE INTO {table_name} VALUES ({', '.join(['?'] * table_width)})"
+        query = f"INSERT INTO {table_name} VALUES ({', '.join(['?'] * table_width)})"
         cursor.executemany(query, rows)

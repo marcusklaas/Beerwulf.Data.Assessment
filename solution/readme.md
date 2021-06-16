@@ -2,7 +2,9 @@
 
 ## The schema
 
-The largest change to the original ERD is a denormalization to make it star shaped, with the `lineitems` table being the single fact table. To still allow linking customer, part and supplier information to these facts, we have included the foreign keys of the order table and 'partsupp' table to the fact table, with the exception of nation and region data. Those last two tables have been removed entirely and have been joined to the customer and supplier tables. We also drop the nation and region comment fields to reduce duplication. We felt this was justified as these fields are likely not very relevant for gathering insights. An alternative approach would have been to add region and nation foreign keys to the fact table for both customers and suppliers, but this seemed cumbersome and messy.
+The largest change to the original ERD is a denormalization to make it star shaped, with the `lineitems` table being the only fact table. To still allow linking customer, part and supplier information to these facts, we have included the foreign keys of the order table and 'partsupp' table to the fact table, with the exception of nation and region data. Those last two tables have been removed entirely and have been joined to the customer and supplier tables. We also drop the nation and region comment fields to reduce duplication. We felt this was justified as these fields are likely not very relevant for gathering insights. An alternative approach would have been to add region and nation foreign keys to the fact table for both customers and suppliers, but this seemed cumbersome and messy.
+
+(Note that the ERD diagram in the problem description is not consistent with the data: the diagram has separate ids for lineitems and 'partsupps', but they're not there in the data.)
 
 ![star-schema](beerwulf.png)
 
@@ -53,7 +55,7 @@ WITH top_nations AS (
 SELECT l_shipmode FROM lineitems
 	JOIN customers ON l_custkey = c_custkey AND c_nationname IN top_nations
 	GROUP BY l_shipmode
-	ORDER BY COUNT(l_id) DESC
+	ORDER BY COUNT(*) DESC
 	LIMIT 1
 ```
 
